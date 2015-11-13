@@ -16,8 +16,10 @@ import robocode.AdvancedRobot;
 
 public class mmRobot extends AdvancedRobot 
 {
-	private static int winningRound;
-	private static int losingRound;
+	private double winningRound;
+	private double losingRound;
+	private double winningRate;
+	private double losingRate; 
 	public static final double PI = Math.PI;
 	private Enemy enemy;
 	private LUQTable qtable;
@@ -262,12 +264,14 @@ public class mmRobot extends AdvancedRobot
 	  public void onWin(WinEvent event) 
 	  { 
 		 winningRound++; 
+		 winningRate= winningRound/(winningRound+losingRound);
+		 losingRate = losingRound/(winningRound+losingRound);
 		 
 		 PrintStream w = null; 
 		    try 
 		    { 
-		      w = new PrintStream(new RobocodeFileOutputStream("/home/lili/workspace/EECE592/RL/src/RL/survival.xlsx", true)); 
-		      w.println(winningRound + " " + losingRound + " " + qtable.totalValue()); 
+		      w = new PrintStream(new RobocodeFileOutputStream("/home/lili/workspace/EECE592/ReinforcementLearning/src/ReinforcementLearning/survival.xlsx", true)); 
+		      w.println(winningRate + " " + losingRate + " " + qtable.totalValue()); 
 		      if (w.checkError()) 
 		        System.out.println("Could not save the data!"); 
 		      w.close(); 
@@ -293,11 +297,13 @@ public class mmRobot extends AdvancedRobot
 	  public void onDeath(DeathEvent event) 
 	  { 
 	     losingRound++; 
+	     winningRate= winningRound/(winningRound+losingRound);
+		 losingRate = losingRound/(winningRound+losingRound);
 	     PrintStream w = null; 
 		    try 
 		    { 
-		      w = new PrintStream(new RobocodeFileOutputStream("/home/lili/workspace/EECE592/RL/src/RL/survival.xlsx", true)); 
-		      w.println(winningRound + " " + losingRound + " " + qtable.totalValue()); 
+		      w = new PrintStream(new RobocodeFileOutputStream("/home/lili/workspace/EECE592/ReinforcementLearning/src/ReinforcementLearning/survival.xlsx", true)); 
+		      w.println(winningRate + " " + losingRate + " " + qtable.totalValue()); 
 		      if (w.checkError()) 
 		        System.out.println("Could not save the data!"); 
 		      w.close(); 
@@ -320,4 +326,3 @@ public class mmRobot extends AdvancedRobot
 		    } 
 	  } 
 }
-
