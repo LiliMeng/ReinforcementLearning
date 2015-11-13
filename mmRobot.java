@@ -152,19 +152,16 @@ public class mmRobot extends AdvancedRobot
 	    return ang; 
 	  } 
 	 
-	  public double getrange( double x1,double y1, double x2,double y2 ) 
+	  public double getRange( double x1,double y1, double x2,double y2 ) 
 	  { 
-	    double xo = x2-x1; 
-	    double yo = y2-y1; 
-	    double h = Math.sqrt( xo*xo + yo*yo ); 
-	    return h; 
+	    return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
 	  } 
 	 
 	  public double absbearing( double x1,double y1, double x2,double y2 ) 
 	  { 
 	    double xo = x2-x1; 
 	    double yo = y2-y1; 
-	    double h = getrange( x1,y1, x2,y2 ); 
+	    double h = getRange( x1,y1, x2,y2 ); 
 	    if( xo > 0 && yo > 0 ) 
 	    { 
 	      return Math.asin( xo / h ); 
@@ -188,7 +185,7 @@ public class mmRobot extends AdvancedRobot
 	  { 
 	    if (enemy.name == e.getName()) 
 	    { 
-	      double change = e.getBullet().getPower() * 9; 
+	      double change = e.getBullet().getPower()*8; 
 	      out.println("Bullet Hit: " + change); 
 	      reward += change; 
 	    } 
