@@ -11,11 +11,11 @@ public class QLearning
 	private int lastState;
 	private int lastAction;
 	private boolean first = true;
-	private LUQTable table;
+	private LUQTable Qtable;
 	
 	public QLearning(LUQTable table)
 	{
-		this.table = table;
+		this.Qtable = table;
 	}
 	
 
@@ -28,15 +28,15 @@ public class QLearning
 		}
 		else
 		{
-			double oldQValue = table.getQValue(lastState, lastAction);
-			double newQValue = oldQValue + LearningRate * (reward+ DiscountRate * table.maxQValue(state)-oldQValue);
-			table.setQValue(lastState, lastAction, newQValue);
+			double oldQValue = Qtable.getQValue(lastState, lastAction);
+			double newQValue = oldQValue + LearningRate * (reward+ DiscountRate * Qtable.maxQValue(state)-oldQValue);
+			Qtable.setQValue(lastState, lastAction, newQValue);
 		}
 		
 		lastState = state;
 		lastAction = action;
 	}
-	
+
 	public int selectAction(int state, long time)
 	{
 		double qValue;
@@ -45,7 +45,7 @@ public class QLearning
 		
 		for(int i =0; i<value.length; i++)
 		{
-			qValue = table.getQValue(state, i);
+			qValue = Qtable.getQValue(state, i);
 			value[i] = Math.exp(ExploitationRate *qValue);
 			sum +=value[i];
 			System.out.println("Q-value: " + qValue);
@@ -61,7 +61,7 @@ public class QLearning
 		}
 		else
 		{
-			return table.bestAction(state);
+			return Qtable.bestAction(state);
 		}
 
 		int action = 0;
