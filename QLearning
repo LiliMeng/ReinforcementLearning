@@ -1,6 +1,9 @@
-package RL;
+package ReinforcementLearning;
 
-public class Qlearning
+import ReinforcementLearning.RobotAction;
+import ReinforcementLearning.LUQTable;
+
+public class QLearning
 {
 	public static final double LearningRate = 0.1;
 	public static final double DiscountRate = 0.9;
@@ -8,16 +11,17 @@ public class Qlearning
 	private int lastState;
 	private int lastAction;
 	private boolean first = true;
-	private Qtable table;
+	private LUQTable table;
 	
-	public Qlearning(Qtable table)
+	public QLearning(LUQTable table)
 	{
 		this.table = table;
 	}
 	
-	public void learn(int state, int action, double reinforcement)
+
+	public void learn(int state, int action, double reward)
 	{
-		System.out.println("Reinforcement: " + reinforcement);
+		System.out.println("reward: " + reward);
 		if(first)
 		{
 			first = false;
@@ -25,9 +29,10 @@ public class Qlearning
 		else
 		{
 			double oldQValue = table.getQValue(lastState, lastAction);
-			double newQValue = oldQValue + LearningRate * (reinforcement+ DiscountRate * table.getMaxQValue(state)-oldQValue);
+			double newQValue = oldQValue + LearningRate * (reward+ DiscountRate * table.maxQValue(state)-oldQValue);
 			table.setQValue(lastState, lastAction, newQValue);
 		}
+		
 		lastState = state;
 		lastAction = action;
 	}
@@ -36,18 +41,19 @@ public class Qlearning
 	{
 		double qValue;
 		double sum = 0.0;
-		double[] value = new double[Action.NumRobotActions];
-		for(int i=0; i<value.length; i++)
+		double[] value = new double[RobotAction.numRobotActions];
+		
+		for(int i =0; i<value.length; i++)
 		{
 			qValue = table.getQValue(state, i);
-			value[i] = Math.exp(ExploitationRate * qValue);
+			value[i] = Math.exp(ExploitationRate *qValue);
 			sum +=value[i];
 			System.out.println("Q-value: " + qValue);
 		}
 		
 		if(sum!=0)
 		{
-			for(int i=0; i<value.length; i++)
+			for(int i = 0; i<value.length; i++)
 			{
 				value[i] /=sum;
 				System.out.println("P(a|s): " + value[i]);
@@ -55,20 +61,19 @@ public class Qlearning
 		}
 		else
 		{
-			return table.getBestAction(state);
+			return table.bestAction(state);
 		}
-		
+
 		int action = 0;
 		double cumProb = 0.0;
 		double randomNum = Math.random();
 		System.out.println("Random Number: " + randomNum);
-		while(randomNum > cumProb && action < value.length)
+		while(randomNum > cumProb && action <value.length)
 		{
-			cumProb += value[action];
+			cumProb +=value[action];
 			action ++;
 		}
 		
 		return action -1;
 	}
-  
 }
