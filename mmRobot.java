@@ -128,7 +128,7 @@ public class mmRobot extends AdvancedRobot
 	    p = new Point2D.Double(enemy.x, enemy.y); 
 	    for (int i = 0; i < 20; i++) 
 	    { 
-	      nextTime = (int)Math.round((getrange(getX(),getY(),p.x,p.y)/(20-(3*firePower)))); 
+	      nextTime = (int)Math.round((getRange(getX(),getY(),p.x,p.y)/(20-(3*firePower)))); 
 	      time = getTime() + nextTime - 10; 
 	      p = enemy.guessPosition(time); 
 	    } 
