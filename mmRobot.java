@@ -37,7 +37,7 @@ public class mmRobot extends AdvancedRobot
 	    enemy = new Enemy(); 
 	    enemy.distance = 100000; 
 	 
-	    setColors(Color.green, Color.white, Color.green); 
+	    setColors(Color.green, Color.white, Color.red); 
 	    setAdjustGunForRobotTurn(true); 
 	    setAdjustRadarForGunTurn(true); 
 	    turnRadarRightRadians(2 * PI); 
@@ -63,7 +63,7 @@ public class mmRobot extends AdvancedRobot
 	      direction *= -1;		//reverse direction 
 	      setAhead(direction*300);	//move in that direction 
 	    } 
-	    setTurnRightRadians(enemy.bearing + (PI/2)); //every turn move to circle strafe the enemy 
+	    setTurnRightRadians(enemy.bearing + (PI/2));
 	  } 
 	 
 	  private void robotMovement() 
