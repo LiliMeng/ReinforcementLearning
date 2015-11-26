@@ -21,8 +21,8 @@ public class mmRobot extends AdvancedRobot
 
 	public static final double PI = Math.PI;
 	private Enemy enemy;
-	private LUQTable qtable;
-	private QLearning learner; 
+	private static LUQTable qtable = null;
+	private static QLearning learner = null; 
 	private double firePower; 
 	private int direction = 1; 
 	private int isHitWall = 0; 
@@ -34,7 +34,7 @@ public class mmRobot extends AdvancedRobot
 	private static final double rewardForWin = 10;
 	private static final double rewardForDeath = -10; 
 	
-	private static final double rewardForHitRobot = -3; 
+	private static final double rewardForHitRobot = 0; 
 	
 	private static final double rewardForBulletHit = 5;
 	private static final double rewardForHitByBullet = -5; 
@@ -42,11 +42,14 @@ public class mmRobot extends AdvancedRobot
 	private static final double rewardForHitWall = -3; 
 	
 	
-	  public void run() 
-	  { 
-	    qtable = new LUQTable(); 
-	    learner = new QLearning(qtable); 
-	    enemy = new Enemy(); 
+	public void run() 
+	{
+		if(qtable == null) {
+			System.out.println("NEW LUT");
+			qtable = new LUQTable(); 
+			learner = new QLearning(qtable); 
+		}
+		enemy = new Enemy(); 
 	    enemy.distance = 100000; 
 	 
 	    setColors(Color.green, Color.white, Color.red); 
@@ -58,7 +61,6 @@ public class mmRobot extends AdvancedRobot
 	    while (true) 
 	    { 
 	      countRound++;
-	      
 	      
 	      if(countRound>20000000)
 	      {
@@ -124,7 +126,7 @@ public class mmRobot extends AdvancedRobot
 	    int heading = RobotState.getHeading(getHeading()); 
 	    int enemyDistance = RobotState.getEnemyDistance(enemy.distance); 
 	    int enemyBearing = RobotState.getEnemyBearing(enemy.bearing); 
-	    out.println("Stste(" + heading + ", " + enemyDistance + ", " + enemyBearing + ", " + isHitWall + ", " + isHitByBullet + ")"); 
+	    out.println("State(" + heading + ", " + enemyDistance + ", " + enemyBearing + ", " + isHitWall + ", " + isHitByBullet + ")"); 
 	    int state = RobotState.mapping[heading][enemyDistance][enemyBearing][isHitWall][isHitByBullet]; 
 	    return state; 
 	  } 
@@ -271,7 +273,9 @@ public class mmRobot extends AdvancedRobot
 	  { 
 		 winningRound++; 
 		 currentReward=rewardForWin;
-		 
+		 int state=RobotState.mapping[0][0][0][0][0];
+		 int action =2;
+		 learner.learn(state, action, currentReward); 
 		 PrintStream w = null; 
 		    try 
 		    { 
@@ -301,8 +305,11 @@ public class mmRobot extends AdvancedRobot
 
 	  public void onDeath(DeathEvent event) 
 	  { 
+		 int state=RobotState.mapping[0][0][0][0][0];
+		 int action =2;
 	     losingRound++;
 	     currentReward=rewardForDeath;
+	     learner.learn(state, action, currentReward);
 	     PrintStream w = null; 
 		    try 
 		    { 
