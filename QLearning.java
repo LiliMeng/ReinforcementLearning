@@ -11,7 +11,6 @@ public class QLearning
 	public double ExploitationRate = 0.01;
 	private int lastState;
 	private int lastAction;
-	//private boolean first = true;
 	private LUQTable Qtable;
 
 	public double setExploitationRate(double value)
@@ -20,7 +19,7 @@ public class QLearning
 		return ExploitationRate;
 	}
 	public QLearning(LUQTable table)
-	{Math.random();
+	{
 		this.Qtable = table;
 	}
 
@@ -44,7 +43,7 @@ public class QLearning
 		int actionIndex = 0;
 		
 		if (thres<ExploitationRate)
-		{//randomly select the action(0,1,2,3)
+		{//randomly select one action from action(0,1,2,3)
 			Random ran = new Random();
 			actionIndex = ran.nextInt(((RobotAction.numRobotActions-1 - 0) + 1));
 		}
