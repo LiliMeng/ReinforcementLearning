@@ -70,16 +70,12 @@ public class mmRobot extends AdvancedRobot
 	    	  out.println("After explorationRate"+learner.ExplorationRate);
 	      }
 	      
-	      robotMovement(); 
+	      performLearning(); 
 	      firePower = 400/enemy.distance; 
 	      if (firePower > 3) 
 	        firePower = 3; 
 	      radarMovement(); 
-	      gunMovement(); 
-	      if (getGunHeat() == 0) 
-	      {
-	        setFire(firePower); 
-	      } 
+	      aimAndFire();
 	      execute(); 
 	    } 
 	  } 
@@ -94,7 +90,7 @@ public class mmRobot extends AdvancedRobot
 	    setTurnRightRadians(enemy.bearing + (PI/2));
 	  } 
 	 
-	  private void robotMovement() 
+	  private void performLearning() 
 	  { 
 	    int state = getState(); 
 	    int action = learner.selectAction(state); 
@@ -151,7 +147,7 @@ public class mmRobot extends AdvancedRobot
 	    setTurnRadarLeftRadians(radarOffset); 
 	  } 
 	 
-	  private void gunMovement() 
+	  private void aimAndFire() 
 	  { 
 	    long time; 
 	    long nextTime; 
@@ -165,6 +161,11 @@ public class mmRobot extends AdvancedRobot
 	    } 
 	    double gunOffset = getGunHeadingRadians() - (Math.PI/2 - Math.atan2(p.y - getY(),p.x -  getX())); 
 	    setTurnGunLeftRadians(NormaliseBearing(gunOffset)); 
+	    
+	    if (getGunHeat() == 0) 
+	      {
+	        setFire(firePower); 
+	      } 
 	  } 
 	 
 	  double NormaliseBearing(double ang) { 
