@@ -3,7 +3,7 @@ package ReinforcementLearning;
 public class RobotState
 {
 	public static final int numHeading = 4;
-	public static final int numEnemyDistance = 20;
+	public static final int numEnemyDistance = 10;
 	public static final int numEnemyBearing = 4;
 	public static final int numHitWall = 2;
 	public static final int numHitByBullet = 2;
