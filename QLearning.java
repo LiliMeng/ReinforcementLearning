@@ -8,15 +8,15 @@ public class QLearning
 {
 	public static final double LearningRate = 0.1;
 	public static final double DiscountRate = 0.9;
-	public double ExploitationRate = 0.01;
+	public double ExplorationRate = 0.01;
 	private int lastState;
 	private int lastAction;
 	private LUQTable Qtable;
 
 	public double setExploitationRate(double value)
 	{
-		ExploitationRate=value;
-		return ExploitationRate;
+		ExplorationRate=value;
+		return ExplorationRate;
 	}
 	public QLearning(LUQTable table)
 	{
@@ -27,10 +27,11 @@ public class QLearning
 	{
 		double oldQValue = Qtable.getQValue(lastState, lastAction);
 		double newQValue = oldQValue + LearningRate * (reward+ DiscountRate * Qtable.maxQValue(state)-oldQValue);
-			
+	    
+		//update the Q value in the look up table
 		Qtable.setQValue(lastState, lastAction, newQValue);
 		
-		
+		//update state and action
 		lastState = state;
 		lastAction = action;
 	}
@@ -42,13 +43,13 @@ public class QLearning
 		
 		int actionIndex = 0;
 		
-		if (thres<ExploitationRate)
+		if (thres<ExplorationRate)
 		{//randomly select one action from action(0,1,2,3)
 			Random ran = new Random();
 			actionIndex = ran.nextInt(((RobotAction.numRobotActions-1 - 0) + 1));
 		}
 		else
-		{//greedy
+		{//e-greedy
 			actionIndex=Qtable.bestAction(state);
 		}
 		return actionIndex;
