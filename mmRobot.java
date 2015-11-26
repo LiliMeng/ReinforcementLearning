@@ -65,9 +65,9 @@ public class mmRobot extends AdvancedRobot
 	      
 	      if(countRound>20000000)
 	      {
-	    	  out.println("Before exploitationRate"+learner.ExplorationRate);
+	    	  out.println("Before explorationRate"+learner.ExplorationRate);
 	    	  learner.setExploitationRate(0);
-	    	  out.println("After exploitationRate"+learner.ExplorationRate);
+	    	  out.println("After explorationRate"+learner.ExplorationRate);
 	      }
 	      
 	      robotMovement(); 
