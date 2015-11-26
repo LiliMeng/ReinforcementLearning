@@ -1,5 +1,10 @@
 package ReinforcementLearning;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import ReinforcementLearning.RobotAction;
 import ReinforcementLearning.RobotState;
 
@@ -25,9 +30,34 @@ public class LUQTable {
 		}
 	}
 	
+	public void saveQTable()
+	{
+		try 
+		{
+			FileWriter fw = new FileWriter(new File("/home/lili/workspace/EECE592/ReinforcementLearning/src/ReinforcementLearning/myQtable.txt"));
+	
+			for(int i=0; i<RobotState.numStates; i++)
+			{
+				for(int j=0; j<RobotAction.numRobotActions; j++)
+				{
+					fw.write("state:  "+i+"  action:   "+j+"  Qvalue   "+Double.toString(getQValue(i,j)));
+					fw.write("\r\n");
+				}
+			}
+			fw.close();
+		 }
+		catch (IOException ex) 
+		{
+			
+            ex.printStackTrace();
+
+        }
+    }
+	
+	
 	public double maxQValue(int state)
 	{
-		double maxQvalue = 0.0;
+		double maxQvalue = qTable[state][0];
 		for(int i=0; i<qTable[state].length;i++)
 		{	
 			if(qTable[state][i] > maxQvalue)
@@ -40,7 +70,8 @@ public class LUQTable {
 	
 	public int bestAction(int state)
 	{
-		double maxQvalue = 0.0;
+		double maxQvalue = qTable[state][0];
+		
 		int bestAct = 0;
 		for(int i=0; i<qTable[state].length; i++)
 		{
@@ -67,13 +98,16 @@ public class LUQTable {
 	public double totalValue()
 	{
 		double sum =0.0;
-		for(int i =0; i<RobotState.numStates; i++)
+		for(int i=0; i<RobotState.numStates; i++)
 		{
 			for(int j=0; j<RobotAction.numRobotActions; j++)
 			{
 				sum = sum + qTable[i][j];
+				
 			}
 		}
 		return sum;
 	}
+	
+	
 }
