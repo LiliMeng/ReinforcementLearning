@@ -44,7 +44,8 @@ public class mmRobot extends AdvancedRobot
 	
 	public void run() 
 	{
-		if(qtable == null) {
+		if(qtable == null) 
+		{
 			System.out.println("NEW LUT");
 			qtable = new LUQTable(); 
 			learner = new QLearning(qtable); 
@@ -64,9 +65,9 @@ public class mmRobot extends AdvancedRobot
 	      
 	      if(countRound>20000000)
 	      {
-	    	  out.println("Before exploitationRate"+learner.ExploitationRate);
+	    	  out.println("Before exploitationRate"+learner.ExplorationRate);
 	    	  learner.setExploitationRate(0);
-	    	  out.println("After exploitationRate"+learner.ExploitationRate);
+	    	  out.println("After exploitationRate"+learner.ExplorationRate);
 	      }
 	      
 	      robotMovement(); 
@@ -112,11 +113,13 @@ public class mmRobot extends AdvancedRobot
 	      case RobotAction.Back: 
 	        setBack(RobotAction.RobotMoveDistance); 
 	        break; 
-	      case RobotAction.TurnLeft: 
+	      case RobotAction.TurnLeftAhead: 
 	        setTurnLeft(RobotAction.RobotTurnDegree); 
+	        setAhead(RobotAction.RobotMoveDistance); 
 	        break; 
-	      case RobotAction.TurnRight: 
-	        setTurnRight(RobotAction.RobotTurnDegree); 
+	      case RobotAction.TurnRightAhead: 
+	        setTurnRight(RobotAction.RobotTurnDegree);
+	        setAhead(RobotAction.RobotMoveDistance); 
 	        break; 
 	    } 
 	  } 
@@ -261,6 +264,31 @@ public class mmRobot extends AdvancedRobot
 	      enemy.energy = e.getEnergy(); 
 	    } 
 	  } 
+	  
+		public void saveQTable()
+		{
+			try 
+			{
+				FileWriter fw = new FileWriter(new File("/home/lili/workspace/EECE592/ReinforcementLearning/src/ReinforcementLearning/myQtable.txt"));
+		
+				for(int i=0; i<RobotState.numStates; i++)
+				{
+					for(int j=0; j<RobotAction.numRobotActions; j++)
+					{
+						fw.write("state:  "+i+"  action:   "+j+"  Qvalue   "+Double.toString(qtable.getQValue(i,j)));
+						fw.write("\r\n");
+					}
+				}
+				fw.close();
+			 }
+			catch (IOException ex) 
+			{
+				
+	            ex.printStackTrace();
+
+	        }
+	    }
+		
 	 
 	  public void onRobotDeath(RobotDeathEvent e) 
 	  {
@@ -269,13 +297,20 @@ public class mmRobot extends AdvancedRobot
 	      enemy.distance = 10000; 
 	  }   
 
+	  
+	  
 	  public void onWin(WinEvent event) 
 	  { 
 		 winningRound++; 
 		 currentReward=rewardForWin;
-		 int state=RobotState.mapping[0][0][0][0][0];
-		 int action =2;
-		 learner.learn(state, action, currentReward); 
+		 saveQTable();
+		
+		 
+		 //int state=RobotState.mapping[0][0][0][0][0];
+		 
+		 //int action =2;
+		// learner.learn(state, action, currentReward);
+
 		 PrintStream w = null; 
 		    try 
 		    { 
@@ -305,11 +340,12 @@ public class mmRobot extends AdvancedRobot
 
 	  public void onDeath(DeathEvent event) 
 	  { 
-		 int state=RobotState.mapping[0][0][0][0][0];
-		 int action =2;
+		// int state=RobotState.mapping[0][0][0][0][0];
+		 //int action =2;
 	     losingRound++;
 	     currentReward=rewardForDeath;
-	     learner.learn(state, action, currentReward);
+	     saveQTable();
+	    // learner.learn(state, action, currentReward);
 	     PrintStream w = null; 
 		    try 
 		    { 
