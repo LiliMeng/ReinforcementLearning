@@ -8,15 +8,19 @@ public class QLearning
 {
 	public static final double LearningRate = 0.1;
 	public static final double DiscountRate = 0.9;
-	public static final double ExploitationRate = 0.1;
+	public double ExploitationRate = 0.8;
 	private int lastState;
 	private int lastAction;
 	private boolean first = true;
 	private LUQTable Qtable;
-	public double QValueDiff;
 
-	public QLearning(LUQTable table)
+	public double setExploitationRate(double value)
 	{
+		ExploitationRate=value;
+		return ExploitationRate;
+	}
+	public QLearning(LUQTable table)
+	{Math.random();
 		this.Qtable = table;
 	}
 
@@ -53,7 +57,6 @@ public class QLearning
 		}
 		else
 		{//greedy
-			
 			actionIndex=Qtable.bestAction(state);
 		}
 		return actionIndex;
